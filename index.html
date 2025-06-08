@@ -1,21 +1,18 @@
 <!DOCTYPE html>
-<html lang="{{ html_lang }}" {{ html_lang_dir }}>
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="utf-8">
-    <title>{{ page_meta.html_title|sanitize_html('STRIP') }}</title>
-    {% if brand_settings.favicon.src %}
-      <link rel="shortcut icon" href="{{ brand_settings.favicon.src|escape_url }}" />
-    {% endif %}
-    <meta name="description" content="{{ page_meta.meta_description }}" />
-
-    <!-- Third-party assets for the interactive report -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Report: The Global AI Insurance Revolution</title>
+    <!-- Chosen Palette: Professional Calm -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard. A fixed top navigation allows users to jump to key sections: Overview, Global Landscape, Regional Deep Dives, Key Themes, and Strategic Imperatives. This non-linear structure prioritizes user-led exploration over the report's original linear format. The Regional Deep Dive section uses interactive cards instead of a map for better responsiveness and clarity. Clicking a card dynamically displays detailed content with tabs for Market Overview, Applications, and Regulation, preventing information overload. This structure was chosen to make the dense report content digestible and engaging for executive-level users who need to find specific information quickly. -->
+    <!-- Visualization & Content Choices: Data is presented using Chart.js for clarity and interactivity. Goals: Inform (Stat Cards for key metrics), Compare (Bar/Line charts for market trends/regional performance), Organize (Tabbed content for regional details, Accordions for challenges/strategies). Interactions: On-hover tooltips for charts, click-to-reveal for regional data and strategic details. Justification: These choices break down complex information into manageable chunks, promoting understanding and user engagement without requiring deep reading of the entire report. All visualizations use Canvas, adhering to the NO SVG/Mermaid constraint. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Inline styles for the report -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -23,11 +20,6 @@
         }
         h1, h2, h3, .nav-link {
             font-family: 'Lexend', sans-serif;
-        }
-        .report-nav {
-            position: sticky;
-            top: 0;
-            z-index: 50;
         }
         .chart-container {
             position: relative;
@@ -38,12 +30,12 @@
             width: 100%;
             margin-left: auto;
             margin-right: auto;
-            height: 24rem;
+            height: 24rem; /* 384px */
             max-height: 40vh;
         }
         @media (min-width: 768px) {
             .chart-container {
-                height: 26rem;
+                height: 26rem; /* 416px */
             }
         }
         .nav-link.active {
@@ -55,46 +47,10 @@
             color: #ffffff;
         }
     </style>
-
-    {# To see a full list of what is included via standard_header_includes please reference this article: https://developers.hubspot.com/docs/cms/hubl/variables#required-page-template-variables #}
-    {{ standard_header_includes }}
 </head>
-<body class="body-wrapper {{ builtin_body_classes }} theme-overrides">
+<body class="text-gray-800">
 
-    {% block header %}
-      <!--
-        templateType: global_partial
-        label: Landing page header
-      -->
-
-      {# Partial variables #}
-
-      {% set template_translations = load_translations('../_locales', html_lang, 'en') %}
-      {% import "../../helpers/variables.hubl.html" %}
-
-      {# Partial #}
-
-      <header class="hs-elevate-header">
-        {% dnd_area "header" label="Header" %}
-          {% dnd_section
-            padding={
-              "top": spacing_24,
-              "bottom": spacing_24
-            }
-          %}
-            {% dnd_module
-              offset=0,
-              width=4,
-              path="@hubspot/logo"
-            %}
-            {% end_dnd_module %}
-          {% end_dnd_section %}
-        {% end_dnd_area %}
-      </header>
-    {% endblock header %}
-
-    <!-- Report Specific Navigation -->
-    <header class="report-nav bg-white/80 backdrop-blur-lg shadow-md">
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
             <h1 class="font-bold text-xl text-gray-900">AI Insurance Report</h1>
             <div class="hidden md:flex space-x-8">
@@ -107,358 +63,470 @@
         </nav>
     </header>
 
-    <main id="main-content">
-      {% block body %}
-      
-        <!-- Main content of the interactive report starts here -->
-        <div class="container mx-auto p-6">
+    <main class="container mx-auto p-6">
 
-            <!-- Section 1: Overview -->
-            <section id="overview" class="pt-16 pb-12">
-                <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-900">The AI Insurance Revolution</h2>
-                <p class="text-lg text-center text-gray-600 mt-4 max-w-3xl mx-auto">An interactive analysis of AI's transformative impact on the global insurance sector, highlighting market dynamics, regional adoption, and strategic imperatives for 2024-2028.</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform">
-                        <div id="stat-cagr" class="text-5xl font-bold text-blue-600">36.6%</div>
-                        <p class="text-gray-600 mt-2">Projected CAGR for AI in Insurance (2025-2029)</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform">
-                        <div id="stat-genai" class="text-5xl font-bold text-blue-600">$8B+</div>
-                        <p class="text-gray-600 mt-2">GenAI Insurance Market by 2032</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform">
-                        <div id="stat-embedded" class="text-5xl font-bold text-blue-600">$950B</div>
-                        <p class="text-gray-600 mt-2">Embedded Insurance GWP by 2030</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Section 2: Global Landscape -->
-            <section id="global-landscape" class="pt-20 pb-12">
-                <h2 class="text-4xl font-bold text-gray-900">Global Landscape: A Market in Hyper-Growth</h2>
-                <p class="text-lg text-gray-600 mt-2 mb-8 max-w-3xl">The financial commitment to AI within insurance is substantial and accelerating rapidly, signaling a fundamental shift from siloed experiments to a core component of end-to-end insurance operations.</p>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="chart-container">
-                        <canvas id="marketGrowthChart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="insurtechFundingChart"></canvas>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Section 3: Regional Deep Dive -->
-            <section id="regional-dive" class="pt-20 pb-12">
-                <h2 class="text-4xl font-bold text-gray-900">Regional Deep Dive</h2>
-                <p class="text-lg text-gray-600 mt-2 mb-8 max-w-3xl">Explore the diverse and multifaceted global picture of AI adoption. Select a region to view a detailed analysis of its market dynamics, key applications, and regulatory environment.</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" id="region-selector">
-                </div>
-
-                <div id="region-details" class="bg-white p-8 rounded-xl shadow-xl min-h-[500px] hidden">
-                    <h3 id="region-title" class="text-3xl font-bold mb-4 text-gray-900"></h3>
-                    <div class="border-b border-gray-200 mb-6">
-                        <nav class="-mb-px flex space-x-6" id="region-tabs">
-                        </nav>
-                    </div>
-                    <div id="region-content">
-                    </div>
-                </div>
-            </section>
+        <!-- Section 1: Overview -->
+        <section id="overview" class="pt-16 pb-12">
+            <h2 class="text-4xl md:text-5xl font-bold text-center text-gray-900">The AI Insurance Revolution</h2>
+            <p class="text-lg text-center text-gray-600 mt-4 max-w-3xl mx-auto">An interactive analysis of AI's transformative impact on the global insurance sector, highlighting market dynamics, regional adoption, and strategic imperatives for 2024-2028.</p>
             
-            <!-- Section 4: Key Themes -->
-            <section id="key-themes" class="pt-20 pb-12">
-                <h2 class="text-4xl font-bold text-gray-900">Universal Challenges & Opportunities</h2>
-                <p class="text-lg text-gray-600 mt-2 mb-8 max-w-3xl">Across all regions, insurers face a common set of critical hurdles and strategic opportunities in the era of AI-driven transformation.</p>
-
-                <div id="themes-container" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform">
+                    <div id="stat-cagr" class="text-5xl font-bold text-blue-600">36.6%</div>
+                    <p class="text-gray-600 mt-2">Projected CAGR for AI in Insurance (2025-2029)</p>
                 </div>
-            </section>
-            
-            <!-- Section 5: Strategies -->
-            <section id="strategies" class="pt-20 pb-12">
-                <h2 class="text-4xl font-bold text-gray-900">Strategic Imperatives: The Path Forward</h2>
-                 <p class="text-lg text-gray-600 mt-2 mb-8 max-w-3xl">Navigating the AI revolution successfully requires a multifaceted strategic approach that addresses challenges while capitalizing on immense opportunities.</p>
-                <div id="strategies-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform">
+                    <div id="stat-genai" class="text-5xl font-bold text-blue-600">$8B+</div>
+                    <p class="text-gray-600 mt-2">GenAI Insurance Market by 2032</p>
                 </div>
-            </section>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-transform">
+                    <div id="stat-embedded" class="text-5xl font-bold text-blue-600">$950B</div>
+                    <p class="text-gray-600 mt-2">Embedded Insurance GWP by 2030</p>
+                </div>
+            </div>
+        </section>
 
-        </div>
-      
-      {% endblock body %}
+        <!-- Section 2: Global Landscape -->
+        <section id="global-landscape" class="pt-20 pb-12">
+            <h2 class="text-4xl font-bold text-gray-900">Global Landscape: A Market in Hyper-Growth</h2>
+            <p class="text-lg text-gray-600 mt-2 mb-8 max-w-3xl">The financial commitment to AI within insurance is substantial and accelerating rapidly, signaling a fundamental shift from siloed experiments to a core component of end-to-end insurance operations.</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="chart-container">
+                    <canvas id="marketGrowthChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="insurtechFundingChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Regional Deep Dive -->
+        <section id="regional-dive" class="pt-20 pb-12">
+            <h2 class="text-4xl font-bold text-gray-900">Regional Deep Dive</h2>
+            <p class="text-lg text-gray-600 mt-2 mb-8 max-w-3xl">Explore the diverse and multifaceted global picture of AI adoption. Select a region to view a detailed analysis of its market dynamics, key applications, and regulatory environment.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" id="region-selector">
+                <!-- Region selection cards will be injected here by JS -->
+            </div>
+
+            <div id="region-details" class="bg-white p-8 rounded-xl shadow-xl min-h-[500px] hidden">
+                <h3 id="region-title" class="text-3xl font-bold mb-4 text-gray-900"></h3>
+                <div class="border-b border-gray-200 mb-6">
+                    <nav class="-mb-px flex space-x-6" id="region-tabs">
+                        <!-- Tab buttons will be injected here by JS -->
+                    </nav>
+                </div>
+                <div id="region-content">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 4: Key Themes -->
+        <section id="key-themes" class="pt-20 pb-12">
+            <h2 class="text-4xl font-bold text-gray-900">Universal Challenges & Opportunities</h2>
+            <p class="text-lg text-gray-600 mt-2 mb-8 max-w-3xl">Across all regions, insurers face a common set of critical hurdles and strategic opportunities in the era of AI-driven transformation.</p>
+
+            <div id="themes-container" class="space-y-4">
+                <!-- Accordion items will be injected by JS -->
+            </div>
+        </section>
+        
+        <!-- Section 5: Strategies -->
+        <section id="strategies" class="pt-20 pb-12">
+            <h2 class="text-4xl font-bold text-gray-900">Strategic Imperatives: The Path Forward</h2>
+             <p class="text-lg text-gray-600 mt-2 mb-8 max-w-3xl">Navigating the AI revolution successfully requires a multifaceted strategic approach that addresses challenges while capitalizing on immense opportunities.</p>
+            <div id="strategies-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Strategy cards will be injected by JS -->
+            </div>
+        </section>
+
     </main>
+    
+    <footer class="text-center py-6 bg-gray-100 border-t mt-12">
+        <p class="text-gray-500">&copy; 2025 AI in Insurance Global Analysis. All Rights Reserved.</p>
+    </footer>
 
-    {% block footer %}
-      <!--
-        templateType: global_partial
-        label: Landing page footer
-      -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
 
-      {# Partial variables #}
-
-      {% set template_translations = load_translations('../_locales', html_lang, 'en') %}
-      {% import "../../helpers/variables.hubl.html" %}
-
-      {# Partial #}
-
-      <footer class="hs-elevate-footer">
-        {% dnd_area "footer" label="Footer" %}
-          {% dnd_section
-            background_color={{ dark_section_1_background_color }},
-            padding={
-              "top": section_vertical_spacing_small,
-              "bottom": section_vertical_spacing_small
-            }
-          %}
-            {% dnd_column %}
-              {% dnd_row
-                margin={
-                  "bottom": spacing_16
+    const appData = {
+        regions: {
+            americas: {
+                name: "The Americas",
+                icon: '🌎',
+                summary: "Innovation leader navigating an 'execution gap'.",
+                details: {
+                    overview: `
+                        <p>The Americas, led by the United States, represent the largest and most dynamic market for AI in insurance. It is characterized by high levels of innovation and significant investment. However, the region faces a notable "execution gap"—a disparity between aggressive AI strategies and fully scaled, enterprise-wide deployment.</p>
+                        <ul class="list-disc list-inside space-y-2 mt-4">
+                            <li><strong>US Market Leadership:</strong> The North American GenAI in Insurance market is projected to hit <strong>$7.27 Billion by 2034</strong>.</li>
+                            <li><strong>The "Execution Gap":</strong> While 90% of executives call AI a top priority, only <strong>22%</strong> have solutions fully operational, hindered by talent shortages and legacy systems.</li>
+                            <li><strong>Canada's Collaborative Growth:</strong> The market is projected to grow from <strong>$1.3 Billion (2024) to $12.5 Billion (2035)</strong>, with a unique focus on industry-wide collaboration to combat issues like fraud.</li>
+                        </ul>
+                    `,
+                    applications: `
+                        <p>Insurers in the Americas are deploying AI to realize tangible benefits in core operations, with a strong focus on ROI.</p>
+                        <ul class="list-disc list-inside space-y-2 mt-4">
+                            <li><strong>Underwriting & Claims:</strong> Leading insurers report underwriting efficiency gains of up to 36% and claims processing cost reductions of up to 20%.</li>
+                            <li><strong>InsurTech Innovation:</strong> Lemonade's AI bot "Maya" famously processed a claim in just three seconds, showcasing the potential for real-time resolution.</li>
+                            <li><strong>Fraud Detection:</strong> Major Canadian insurers like Manulife are deploying GenAI use cases, while the CLHIA utilizes pooled data and AI for industry-wide fraud detection.</li>
+                        </ul>
+                    `,
+                    regulation: `
+                        <p>The regulatory environment is primarily shaped by state- and province-level actions, with influential national bodies providing guidance.</p>
+                        <ul class="list-disc list-inside space-y-2 mt-4">
+                            <li><strong>United States:</strong> Regulation is state-led, guided by the National Association of Insurance Commissioners (NAIC) Model Bulletin, which emphasizes fairness, accountability, and transparency.</li>
+                            <li><strong>Canada:</strong> The approach is one of "observe and adapt," with existing privacy laws like PIPEDA providing oversight while more comprehensive legislation (AIDA) is being finalized.</li>
+                        </ul>
+                    `
                 }
-              %}
-                {% dnd_module
-                  path="@hubspot/logo",
-                  horizontal_alignment="CENTER",
-                  img={
-                    "loading": "lazy"
-                  }
-                %}
-                {% end_dnd_module %}
-              {% end_dnd_row %}
-              {% dnd_row %}
-                {% dnd_module
-                  path="../../components/modules/RichText",
-                  groupStyle={
-                    "sectionStyleVariant": "section_variant_4"
-                  }
-                %}
-                  {% module_attribute "richTextContentHTML"%}
-                    <div style="text-align: center;">
-                      <span>{{ template_translations.partial_footer_copyright.message }}</span>
-                    </div>
-                  {% end_module_attribute %}
-                {% end_dnd_module %}
-              {% end_dnd_row %}
-            {% end_dnd_column %}
-          {% end_dnd_section %}
-        {% end_dnd_area %}
-      </footer>
-    {% endblock footer %}
-
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-
-        const appData = {
-            regions: {
-                americas: {
-                    name: "The Americas",
-                    icon: '🌎',
-                    summary: "Innovation leader navigating an 'execution gap'.",
-                    details: {
-                        overview: `<p>The Americas, led by the United States, represent the largest and most dynamic market for AI in insurance. It is characterized by high levels of innovation and significant investment. However, the region faces a notable "execution gap"—a disparity between aggressive AI strategies and fully scaled, enterprise-wide deployment.</p><ul class="list-disc list-inside space-y-2 mt-4"><li><strong>US Market Leadership:</strong> The North American GenAI in Insurance market is projected to hit <strong>$7.27 Billion by 2034</strong>.</li><li><strong>The "Execution Gap":</strong> While 90% of executives call AI a top priority, only <strong>22%</strong> have solutions fully operational, hindered by talent shortages and legacy systems.</li><li><strong>Canada's Collaborative Growth:</strong> The market is projected to grow from <strong>$1.3 Billion (2024) to $12.5 Billion (2035)</strong>, with a unique focus on industry-wide collaboration to combat issues like fraud.</li></ul>`,
-                        applications: `<p>Insurers in the Americas are deploying AI to realize tangible benefits in core operations, with a strong focus on ROI.</p><ul class="list-disc list-inside space-y-2 mt-4"><li><strong>Underwriting & Claims:</strong> Leading insurers report underwriting efficiency gains of up to 36% and claims processing cost reductions of up to 20%.</li><li><strong>InsurTech Innovation:</strong> Lemonade's AI bot "Maya" famously processed a claim in just three seconds, showcasing the potential for real-time resolution.</li><li><strong>Fraud Detection:</strong> Major Canadian insurers like Manulife are deploying GenAI use cases, while the CLHIA utilizes pooled data and AI for industry-wide fraud detection.</li></ul>`,
-                        regulation: `<p>The regulatory environment is primarily shaped by state- and province-level actions, with influential national bodies providing guidance.</p><ul class="list-disc list-inside space-y-2 mt-4"><li><strong>United States:</strong> Regulation is state-led, guided by the National Association of Insurance Commissioners (NAIC) Model Bulletin, which emphasizes fairness, accountability, and transparency.</li><li><strong>Canada:</strong> The approach is one of "observe and adapt," with existing privacy laws like PIPEDA providing oversight while more comprehensive legislation (AIDA) is being finalized.</li></ul>`
-                    }
-                },
-                europe: {
-                    name: "UK & Europe",
-                    icon: '🌍',
-                    summary: "Pioneering regulation while fostering a strong InsurTech ecosystem.",
-                    details: {
-                        overview: `<p>The UK and Europe are influential landscapes characterized by a complex interplay between pioneering regulatory initiatives and strong, though recently fluctuating, InsurTech ecosystems.</p><ul class="list-disc list-inside space-y-2 mt-4"><li><strong>UK as InsurTech Hub:</strong> The world's second-largest InsurTech cluster, contributing nearly <strong>£5 billion</strong> to its economy.</li><li><strong>EU AI Spending:</strong> European spending on AI is projected to reach <strong>$144.6 Billion by 2028</strong>, with a strong CAGR of 30.3%.</li><li><strong>Emerging Risk:</strong> A key concern in the UK is "Silent AI," where AI-driven risks are not explicitly addressed in policies, potentially creating unforeseen liabilities.</li></ul>`,
-                        applications: `<p>European insurers are actively applying AI to enhance efficiency and customer experience across the value chain.</p><ul class="list-disc list-inside space-y-2 mt-4"><li><strong>Claims Transformation (Aviva UK):</strong> Deployed over 80 AI models, leading to a 30% improvement in claims routing accuracy and reducing complex case liability assessment by 23 days.</li><li><strong>London Market Modernization:</strong> InsurX has developed a digital exchange for algorithmic trading of insurance risks, projecting to trade <strong>$1 billion in premiums by 2026</strong>.</li><li><strong>CX Enhancement:</strong> Allianz Benelux utilizes an AI-powered chatbot to simplify its claims process.</li></ul>`,
-                        regulation: `<p>Europe is at the forefront of establishing comprehensive AI-specific regulations.</p><ul class="list-disc list-inside space-y-2 mt-4"><li><strong>EU AI Act:</strong> A landmark, risk-based law set to apply from 2025. It categorizes AI for life/health insurance underwriting as <strong>"high-risk,"</strong> mandating stringent transparency and human oversight.</li><li><strong>UK's Pro-Innovation Stance:</strong> The UK has adopted a more context-specific approach, relying on existing regulators to oversee AI within their sectors, guided by principles of safety, fairness, and accountability.</li></ul>`
-                    }
-                },
-                apac: {
-                    name: "Asia-Pacific",
-                    icon: '🌏',
-                    summary: "A diverse landscape of hyper-growth markets.",
-                    details: {
-                        overview: `<p>The Asia-Pacific region presents a dynamic and diverse landscape of high-growth markets at varying stages of AI maturity, from the digital powerhouses of China and India to the mature markets of ANZ and the distinct national strategies of Japan and South Korea.</p><ul class="list-disc list-inside space-y-2 mt-4"><li><strong>China's Dominance:</strong> On a clear trajectory to lead the market, driven by immense scale, government impetus, and ecosystem strategies of giants like Ping An.</li><li><strong>India's Momentum:</strong> Demonstrates the strongest AI adoption momentum globally, fueled by rapid digitalization and proactive regulation (e.g., Bima Sugam marketplace).</li><li><strong>SEA's Potential:</strong> Southeast Asia shows significant potential, especially in embedded insurance models, with Singapore acting as a key innovation hub.</li></ul>`,
-                        applications: `<p>AI adoption across APAC is rapid, with a focus on mobile-first solutions and addressing the needs of a massive, diverse population.</p><ul class="list-disc list-inside space-y-2 mt-4"><li><strong>Comprehensive Integration (Ping An, China):</strong> Utilizes a "Finance + Technology" strategy with over 53,000 patent applications, leveraging data from 240M+ customers for dynamic premium pricing and healthtech solutions.</li><li><strong>Claims Automation (ANZ):</strong> 88% of Australian insurers report using GenAI in claims, showcasing rapid uptake.</li><li><strong>Parametric Insurance (ANZ):</strong> Innovative use of AI-driven parametric insurance linked to environmental risks, such as protecting the Great Barrier Reef.</li><li><strong>CX Automation (India/SK):</strong> ICICI Lombard (India) and AIA (South Korea) are using AI to enable real-time claims inspection and instant payment processing.</li></ul>`,
-                        regulation: `<p>The regulatory landscape in APAC is highly fragmented, reflecting diverse national priorities.</p><ul class="list-disc list-inside space-y-2 mt-4"><li><strong>China:</strong> A "managed innovation" approach combining strong government support with stringent data security rules (e.g., NFRA's 2024 FinSec Measures).</li><li><strong>India:</strong> Proactive and facilitative regulation from IRDAI, fostering innovation through sandboxes while enforcing the Digital Personal Data Protection Act.</li><li><strong>ANZ:</strong> Proactive oversight from regulators like ASIC (Australia), which warns of a potential "governance gap" and supports ex-ante rules for high-risk AI.</li><li><strong>Japan & South Korea:</strong> Japan is pursuing a "light-touch," pro-innovation AI Bill, while South Korea has enacted a comprehensive, risk-based AI Framework Act.</li></ul>`
-                    }
-                },
             },
-            themes: [
-                { name: "The Global AI Talent War", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283-.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>`, content: "An acute shortage of data scientists and AI governance experts is a critical bottleneck hindering innovation. The strategic response is shifting from solely recruiting scarce specialists to enterprise-wide upskilling to create a more 'AI-literate' workforce." },
-                { name: "Modernizing Legacy Infrastructure", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" /></svg>`, content: "Outdated IT systems universally impede AI scalability. Modernizing core platforms and embracing cloud computing are no longer optional upgrades but fundamental prerequisites for remaining competitive and unlocking AI's full potential." },
-                { name: "Ethical AI & Building Trust", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.417l4.5-4.5M12 14a2 2 0 100-4 2 2 0 000 4z" /></svg>`, content: "Concerns over algorithmic bias, data privacy, and lack of transparency can erode customer trust. Proactively embedding robust governance frameworks that ensure fairness and explainability is paramount for sustainable AI deployment." },
-                { name: "Cybersecurity in an AI World", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>`, content: "AI amplifies security risks, with malicious actors using AI for more sophisticated attacks. This creates an 'AI arms race,' where insurers must continuously develop AI-driven defense mechanisms to counter emerging threats." }
-            ],
-            strategies: [
-                { title: "Cultivate Agile AI Strategies", content: "Move from rigid, long-term roadmaps to adaptive strategies. Foster a culture of continuous learning and experimentation to rapidly pilot, scale, and pivot AI initiatives as new capabilities emerge." },
-                { title: "Win the AI Talent War", content: "Beyond recruiting, invest heavily in upskilling programs to create an AI-literate workforce. Empower existing employees with domain expertise to use AI as an augmentation tool." },
-                { title: "Prioritize Ethical AI Governance", content: "Embed robust governance frameworks into the core of AI systems. Proactively address bias, ensure transparency, and establish clear accountability to build and maintain consumer trust." },
-                { title: "Modernize Core Systems", content: "Make the modernization of legacy IT and the adoption of cloud-native architectures a strategic priority. This is a fundamental prerequisite for scaling AI effectively and breaking down data silos." },
-                { title: "Master Ecosystem Collaboration", content: "Forge deep collaborations with InsurTechs, technology providers, and even non-insurance entities. The future of insurance is ecosystem-driven, focused on delivering proactive and embedded value." },
-                { title: "Measure the Full Spectrum of Value", content: "Develop comprehensive ROI models that capture not just operational efficiencies but also strategic benefits like improved customer lifetime value, brand reputation, and speed of innovation." }
-            ]
-        };
-
-        const renderRegionSelector = () => {
-            const container = document.getElementById('region-selector');
-            if(container) container.innerHTML = Object.keys(appData.regions).map(key => {
-                const region = appData.regions[key];
-                return `<div class="bg-white p-6 rounded-xl shadow-lg cursor-pointer transform hover:-translate-y-1 transition-transform" data-region="${key}"><div class="flex items-center"><span class="text-4xl mr-4">${region.icon}</span><div><h4 class="text-xl font-bold text-gray-900">${region.name}</h4><p class="text-gray-600">${region.summary}</p></div></div></div>`;
-            }).join('');
-        };
-
-        const renderRegionDetails = (regionKey) => {
-            const detailsContainer = document.getElementById('region-details');
-            const region = appData.regions[regionKey];
-            if (!region || !detailsContainer) return;
-
-            document.getElementById('region-title').textContent = region.name;
-            const tabsContainer = document.getElementById('region-tabs');
-            tabsContainer.innerHTML = Object.keys(region.details).map((tabKey, index) => {
-                const isActive = index === 0;
-                return `<button class="tab-button capitalize py-2 px-4 rounded-md text-sm font-semibold transition-colors ${isActive ? 'active' : 'text-gray-500 hover:bg-gray-100'}" data-region="${regionKey}" data-tab="${tabKey}">${tabKey.replace(/_/g, ' ')}</button>`;
-            }).join('');
-            
-            detailsContainer.classList.remove('hidden');
-            setActiveTab(regionKey, 'overview');
-        };
-        
-        const setActiveTab = (regionKey, tabKey) => {
-            const region = appData.regions[regionKey];
-            if (!region || !region.details[tabKey]) return;
-            
-            document.getElementById('region-content').innerHTML = region.details[tabKey];
-
-            document.querySelectorAll('#region-tabs .tab-button').forEach(btn => {
-                const isActive = btn.dataset.tab === tabKey;
-                btn.classList.toggle('active', isActive);
-                btn.classList.toggle('text-gray-500', !isActive);
-                btn.classList.toggle('hover:bg-gray-100', !isActive);
-            });
-        };
-
-        const renderThemes = () => {
-            const container = document.getElementById('themes-container');
-            if(container) container.innerHTML = appData.themes.map((theme, index) => `<div class="bg-white rounded-lg shadow-md overflow-hidden"><button class="w-full p-5 text-left flex items-center justify-between focus:outline-none" data-accordion="theme-${index}"><div class="flex items-center">${theme.icon}<h4 class="text-xl font-semibold ml-4 text-gray-900">${theme.name}</h4></div><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transition-transform transform accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg></button><div id="theme-${index}-content" class="px-5 pb-5 text-gray-600 hidden"><p>${theme.content}</p></div></div>`).join('');
-        };
-        
-        const renderStrategies = () => {
-            const container = document.getElementById('strategies-container');
-            if(container) container.innerHTML = appData.strategies.map(strategy => `<div class="bg-white p-6 rounded-xl shadow-lg"><h4 class="text-xl font-bold text-gray-900 mb-2">${strategy.title}</h4><p class="text-gray-600">${strategy.content}</p></div>`).join('');
-        };
-
-        const setupEventListeners = () => {
-            document.getElementById('region-selector')?.addEventListener('click', (e) => {
-                const card = e.target.closest('[data-region]');
-                if (card) {
-                    renderRegionDetails(card.dataset.region);
-                    document.getElementById('region-details').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            europe: {
+                name: "UK & Europe",
+                icon: '🌍',
+                summary: "Pioneering regulation while fostering a strong InsurTech ecosystem.",
+                details: {
+                    overview: `
+                        <p>The UK and Europe are influential landscapes characterized by a complex interplay between pioneering regulatory initiatives and strong, though recently fluctuating, InsurTech ecosystems.</p>
+                        <ul class="list-disc list-inside space-y-2 mt-4">
+                            <li><strong>UK as InsurTech Hub:</strong> The world's second-largest InsurTech cluster, contributing nearly <strong>£5 billion</strong> to its economy.</li>
+                            <li><strong>EU AI Spending:</strong> European spending on AI is projected to reach <strong>$144.6 Billion by 2028</strong>, with a strong CAGR of 30.3%.</li>
+                            <li><strong>Emerging Risk:</strong> A key concern in the UK is "Silent AI," where AI-driven risks are not explicitly addressed in policies, potentially creating unforeseen liabilities.</li>
+                        </ul>
+                    `,
+                    applications: `
+                        <p>European insurers are actively applying AI to enhance efficiency and customer experience across the value chain.</p>
+                        <ul class="list-disc list-inside space-y-2 mt-4">
+                            <li><strong>Claims Transformation (Aviva UK):</strong> Deployed over 80 AI models, leading to a 30% improvement in claims routing accuracy and reducing complex case liability assessment by 23 days.</li>
+                            <li><strong>London Market Modernization:</strong> InsurX has developed a digital exchange for algorithmic trading of insurance risks, projecting to trade <strong>$1 billion in premiums by 2026</strong>.</li>
+                            <li><strong>CX Enhancement:</strong> Allianz Benelux utilizes an AI-powered chatbot to simplify its claims process.</li>
+                        </ul>
+                    `,
+                    regulation: `
+                        <p>Europe is at the forefront of establishing comprehensive AI-specific regulations.</p>
+                        <ul class="list-disc list-inside space-y-2 mt-4">
+                            <li><strong>EU AI Act:</strong> A landmark, risk-based law set to apply from 2025. It categorizes AI for life/health insurance underwriting as <strong>"high-risk,"</strong> mandating stringent transparency and human oversight.</li>
+                            <li><strong>UK's Pro-Innovation Stance:</strong> The UK has adopted a more context-specific approach, relying on existing regulators to oversee AI within their sectors, guided by principles of safety, fairness, and accountability.</li>
+                        </ul>
+                    `
                 }
-            });
-
-            document.getElementById('region-tabs')?.addEventListener('click', (e) => {
-                const tabButton = e.target.closest('.tab-button');
-                if (tabButton) {
-                    setActiveTab(tabButton.dataset.region, tabButton.dataset.tab);
+            },
+            apac: {
+                name: "Asia-Pacific",
+                icon: '🌏',
+                summary: "A diverse landscape of hyper-growth markets.",
+                details: {
+                    overview: `
+                        <p>The Asia-Pacific region presents a dynamic and diverse landscape of high-growth markets at varying stages of AI maturity, from the digital powerhouses of China and India to the mature markets of ANZ and the distinct national strategies of Japan and South Korea.</p>
+                        <ul class="list-disc list-inside space-y-2 mt-4">
+                            <li><strong>China's Dominance:</strong> On a clear trajectory to lead the market, driven by immense scale, government impetus, and ecosystem strategies of giants like Ping An.</li>
+                            <li><strong>India's Momentum:</strong> Demonstrates the strongest AI adoption momentum globally, fueled by rapid digitalization and proactive regulation (e.g., Bima Sugam marketplace).</li>
+                            <li><strong>SEA's Potential:</strong> Southeast Asia shows significant potential, especially in embedded insurance models, with Singapore acting as a key innovation hub.</li>
+                        </ul>
+                    `,
+                    applications: `
+                        <p>AI adoption across APAC is rapid, with a focus on mobile-first solutions and addressing the needs of a massive, diverse population.</p>
+                        <ul class="list-disc list-inside space-y-2 mt-4">
+                            <li><strong>Comprehensive Integration (Ping An, China):</strong> Utilizes a "Finance + Technology" strategy with over 53,000 patent applications, leveraging data from 240M+ customers for dynamic premium pricing and healthtech solutions.</li>
+                             <li><strong>Claims Automation (ANZ):</strong> 88% of Australian insurers report using GenAI in claims, showcasing rapid uptake.</li>
+                            <li><strong>Parametric Insurance (ANZ):</strong> Innovative use of AI-driven parametric insurance linked to environmental risks, such as protecting the Great Barrier Reef.</li>
+                            <li><strong>CX Automation (India/SK):</strong> ICICI Lombard (India) and AIA (South Korea) are using AI to enable real-time claims inspection and instant payment processing.</li>
+                        </ul>
+                    `,
+                    regulation: `
+                        <p>The regulatory landscape in APAC is highly fragmented, reflecting diverse national priorities.</p>
+                        <ul class="list-disc list-inside space-y-2 mt-4">
+                            <li><strong>China:</strong> A "managed innovation" approach combining strong government support with stringent data security rules (e.g., NFRA's 2024 FinSec Measures).</li>
+                             <li><strong>India:</strong> Proactive and facilitative regulation from IRDAI, fostering innovation through sandboxes while enforcing the Digital Personal Data Protection Act.</li>
+                             <li><strong>ANZ:</strong> Proactive oversight from regulators like ASIC (Australia), which warns of a potential "governance gap" and supports ex-ante rules for high-risk AI.</li>
+                            <li><strong>Japan & South Korea:</strong> Japan is pursuing a "light-touch," pro-innovation AI Bill, while South Korea has enacted a comprehensive, risk-based AI Framework Act.</li>
+                        </ul>
+                    `
                 }
-            });
-            
-            document.getElementById('themes-container')?.addEventListener('click', (e) => {
-                const button = e.target.closest('[data-accordion]');
-                if (button) {
-                    const content = document.getElementById(`${button.dataset.accordion}-content`);
-                    const icon = button.querySelector('.accordion-icon');
-                    content.classList.toggle('hidden');
-                    icon.classList.toggle('rotate-180');
-                }
-            });
+            },
+        },
+        themes: [
+            {
+                name: "The Global AI Talent War",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283-.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>`,
+                content: "An acute shortage of data scientists and AI governance experts is a critical bottleneck hindering innovation. The strategic response is shifting from solely recruiting scarce specialists to enterprise-wide upskilling to create a more 'AI-literate' workforce."
+            },
+            {
+                name: "Modernizing Legacy Infrastructure",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" /></svg>`,
+                content: "Outdated IT systems universally impede AI scalability. Modernizing core platforms and embracing cloud computing are no longer optional upgrades but fundamental prerequisites for remaining competitive and unlocking AI's full potential."
+            },
+            {
+                name: "Ethical AI & Building Trust",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.417l4.5-4.5M12 14a2 2 0 100-4 2 2 0 000 4z" /></svg>`,
+                content: "Concerns over algorithmic bias, data privacy, and lack of transparency can erode customer trust. Proactively embedding robust governance frameworks that ensure fairness and explainability is paramount for sustainable AI deployment."
+            },
+            {
+                name: "Cybersecurity in an AI World",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>`,
+                content: "AI amplifies security risks, with malicious actors using AI for more sophisticated attacks. This creates an 'AI arms race,' where insurers must continuously develop AI-driven defense mechanisms to counter emerging threats."
+            }
+        ],
+        strategies: [
+            {
+                title: "Cultivate Agile AI Strategies",
+                content: "Move from rigid, long-term roadmaps to adaptive strategies. Foster a culture of continuous learning and experimentation to rapidly pilot, scale, and pivot AI initiatives as new capabilities emerge."
+            },
+            {
+                title: "Win the AI Talent War",
+                content: "Beyond recruiting, invest heavily in upskilling programs to create an AI-literate workforce. Empower existing employees with domain expertise to use AI as an augmentation tool."
+            },
+            {
+                title: "Prioritize Ethical AI Governance",
+                content: "Embed robust governance frameworks into the core of AI systems. Proactively address bias, ensure transparency, and establish clear accountability to build and maintain consumer trust."
+            },
+            {
+                title: "Modernize Core Systems",
+                content: "Make the modernization of legacy IT and the adoption of cloud-native architectures a strategic priority. This is a fundamental prerequisite for scaling AI effectively and breaking down data silos."
+            },
+            {
+                title: "Master Ecosystem Collaboration",
+                content: "Forge deep collaborations with InsurTechs, technology providers, and even non-insurance entities. The future of insurance is ecosystem-driven, focused on delivering proactive and embedded value."
+            },
+            {
+                title: "Measure the Full Spectrum of Value",
+                content: "Develop comprehensive ROI models that capture not just operational efficiencies but also strategic benefits like improved customer lifetime value, brand reputation, and speed of innovation."
+            }
+        ]
+    };
 
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('.report-nav .nav-link');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        navLinks.forEach(link => {
-                            const linkHref = link.getAttribute('href');
-                            if(linkHref) {
-                               link.classList.toggle('active', linkHref.substring(1) === entry.target.id);
-                            }
-                        });
-                    }
-                });
-            }, { rootMargin: "-150px 0px -50% 0px" });
+    function renderRegionSelector() {
+        const container = document.getElementById('region-selector');
+        container.innerHTML = Object.keys(appData.regions).map(key => {
+            const region = appData.regions[key];
+            return `
+                <div class="bg-white p-6 rounded-xl shadow-lg cursor-pointer transform hover:-translate-y-1 transition-transform" data-region="${key}">
+                    <div class="flex items-center">
+                        <span class="text-4xl mr-4">${region.icon}</span>
+                        <div>
+                            <h4 class="text-xl font-bold text-gray-900">${region.name}</h4>
+                            <p class="text-gray-600">${region.summary}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
 
-            sections.forEach(section => {
-              if (section.id) {
-                observer.observe(section)
-              }
-            });
-        };
+    function renderRegionDetails(regionKey) {
+        const detailsContainer = document.getElementById('region-details');
+        const region = appData.regions[regionKey];
+        if (!region) return;
+
+        document.getElementById('region-title').textContent = region.name;
         
-        const initCharts = () => {
-            const commonChartOptions = {
-                responsive: true, maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: '#111827', titleFont: { size: 14, family: 'Lexend' },
-                        bodyFont: { size: 12, family: 'Inter' }, padding: 10, cornerRadius: 4, displayColors: false,
-                        callbacks: {
-                            title: (tooltipItems) => {
-                                let label = tooltipItems[0].chart.data.labels[tooltipItems[0].dataIndex];
-                                return Array.isArray(label) ? label.join(' ') : label;
-                            }
+        const tabsContainer = document.getElementById('region-tabs');
+        tabsContainer.innerHTML = Object.keys(region.details).map((tabKey, index) => `
+            <button class="tab-button capitalize py-2 px-4 rounded-md text-sm font-semibold transition-colors ${index === 0 ? 'active' : 'text-gray-500 hover:bg-gray-100'}" data-region="${regionKey}" data-tab="${tabKey}">
+                ${tabKey.replace(/_/g, ' ')}
+            </button>
+        `).join('');
+        
+        detailsContainer.classList.remove('hidden');
+        setActiveTab(regionKey, 'overview');
+    }
+    
+    function setActiveTab(regionKey, tabKey) {
+        const region = appData.regions[regionKey];
+        if (!region || !region.details[tabKey]) return;
+        
+        const contentContainer = document.getElementById('region-content');
+        contentContainer.innerHTML = region.details[tabKey];
+
+        document.querySelectorAll('#region-tabs .tab-button').forEach(btn => {
+            if (btn.dataset.tab === tabKey) {
+                btn.classList.add('active');
+                btn.classList.remove('text-gray-500', 'hover:bg-gray-100');
+            } else {
+                btn.classList.remove('active');
+                btn.classList.add('text-gray-500', 'hover:bg-gray-100');
+            }
+        });
+    }
+
+    function renderThemes() {
+        const container = document.getElementById('themes-container');
+        container.innerHTML = appData.themes.map((theme, index) => `
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <button class="w-full p-5 text-left flex items-center justify-between focus:outline-none" data-accordion="theme-${index}">
+                    <div class="flex items-center">
+                        ${theme.icon}
+                        <h4 class="text-xl font-semibold ml-4 text-gray-900">${theme.name}</h4>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transition-transform transform accordion-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                <div id="theme-${index}-content" class="px-5 pb-5 text-gray-600 hidden">
+                    <p>${theme.content}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    function renderStrategies() {
+        const container = document.getElementById('strategies-container');
+        container.innerHTML = appData.strategies.map(strategy => `
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h4 class="text-xl font-bold text-gray-900 mb-2">${strategy.title}</h4>
+                <p class="text-gray-600">${strategy.content}</p>
+            </div>
+        `).join('');
+    }
+
+    document.getElementById('region-selector').addEventListener('click', (e) => {
+        const card = e.target.closest('[data-region]');
+        if (card) {
+            const regionKey = card.dataset.region;
+            renderRegionDetails(regionKey);
+            document.getElementById('region-details').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+
+    document.getElementById('region-details').addEventListener('click', (e) => {
+        const tabButton = e.target.closest('.tab-button');
+        if (tabButton) {
+            const regionKey = tabButton.dataset.region;
+            const tabKey = tabButton.dataset.tab;
+            setActiveTab(regionKey, tabKey);
+        }
+    });
+    
+    document.getElementById('themes-container').addEventListener('click', (e) => {
+        const button = e.target.closest('[data-accordion]');
+        if (button) {
+            const contentId = `${button.dataset.accordion}-content`;
+            const content = document.getElementById(contentId);
+            const icon = button.querySelector('.accordion-icon');
+            content.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+    });
+
+    const commonChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                backgroundColor: '#111827',
+                titleFont: { size: 14, family: 'Lexend' },
+                bodyFont: { size: 12, family: 'Inter' },
+                padding: 10,
+                cornerRadius: 4,
+                displayColors: false,
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                          return label.join(' ');
+                        } else {
+                          return label;
                         }
                     }
-                },
-                scales: {
-                    y: { beginAtZero: true, grid: { color: '#e5e7eb' }, ticks: { color: '#4b5563', font: { family: 'Inter'} } },
-                    x: { grid: { display: false }, ticks: { color: '#4b5563', font: { family: 'Inter'} } }
                 }
-            };
-
-            const marketGrowthCtx = document.getElementById('marketGrowthChart');
-            if (marketGrowthCtx) {
-                new Chart(marketGrowthCtx.getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: ['2024', ['2029', '(Projected)']],
-                        datasets: [{
-                            label: 'Global AI in Insurance Market ($B)',
-                            data: [7.71, 35.76],
-                            backgroundColor: ['#93c5fd', '#2563eb'],
-                            borderColor: ['#93c5fd', '#1d4ed8'],
-                            borderWidth: 1, borderRadius: 4,
-                        }]
-                    },
-                    options: { ...commonChartOptions, plugins: { ...commonChartOptions.plugins, tooltip: { ...commonChartOptions.plugins.tooltip, callbacks: { ...commonChartOptions.plugins.tooltip.callbacks, label: (context) => `$${context.raw.toFixed(2)} Billion`, }}}, scales: { y: { ...commonChartOptions.scales.y, title: {display: true, text: 'Market Size in USD Billions'} } } }
-                });
             }
-
-            const insurtechFundingCtx = document.getElementById('insurtechFundingChart');
-            if (insurtechFundingCtx) {
-                new Chart(insurtechFundingCtx.getContext('2d'), {
-                    type: 'line',
-                    data: {
-                        labels: ['Q3 2024', 'Q4 2024', 'Q1 2025'],
-                        datasets: [{
-                            label: 'Global InsurTech Funding ($B)',
-                            data: [0.9, 0.69, 1.31],
-                            borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.1)', fill: true,
-                            tension: 0.3, pointBackgroundColor: '#2563eb', pointRadius: 5, pointHoverRadius: 7
-                        }]
-                    },
-                    options: { ...commonChartOptions, plugins: { ...commonChartOptions.plugins, tooltip: { ...commonChartOptions.plugins.tooltip, callbacks: { ...commonChartOptions.plugins.tooltip.callbacks, label: (context) => `Funding: $${context.raw.toFixed(2)} Billion`, }}}, scales: { y: {...commonChartOptions.scales.y, title: { display: true, text: 'Quarterly Funding in USD Billions', font: {weight: '600'}}}, x: {...commonChartOptions.scales.x} } }
-                });
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { color: '#e5e7eb' },
+                ticks: { color: '#4b5563', font: { family: 'Inter'} }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { color: '#4b5563', font: { family: 'Inter'} }
             }
-        };
+        }
+    };
+    
+    const marketGrowthCtx = document.getElementById('marketGrowthChart').getContext('2d');
+    new Chart(marketGrowthCtx, {
+        type: 'bar',
+        data: {
+            labels: ['2024', '2029 (Projected)'],
+            datasets: [{
+                label: 'Global AI in Insurance Market ($B)',
+                data: [7.71, 35.76],
+                backgroundColor: ['#93c5fd', '#2563eb'],
+                borderColor: ['#93c5fd', '#1d4ed8'],
+                borderWidth: 1,
+                borderRadius: 4,
+            }]
+        },
+        options: {
+            ...commonChartOptions,
+            plugins: { ...commonChartOptions.plugins, tooltip: { ...commonChartOptions.plugins.tooltip, callbacks: {
+                ...commonChartOptions.plugins.tooltip.callbacks,
+                label: (context) => `$${context.raw.toFixed(2)} Billion`,
+            }}},
+            scales: { y: { ...commonChartOptions.scales.y, title: {display: true, text: 'Market Size in USD Billions'} } }
+        }
+    });
 
-        renderRegionSelector();
-        renderThemes();
-        renderStrategies();
-        initCharts();
-        setupEventListeners();
-      });
-    </body>
+    const insurtechFundingCtx = document.getElementById('insurtechFundingChart').getContext('2d');
+    new Chart(insurtechFundingCtx, {
+        type: 'line',
+        data: {
+            labels: ['Q3 2024', 'Q4 2024', 'Q1 2025'],
+            datasets: [{
+                label: 'Global InsurTech Funding ($B)',
+                data: [0.9, 0.69, 1.31],
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: '#2563eb',
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+             ...commonChartOptions,
+             plugins: { ...commonChartOptions.plugins, tooltip: { ...commonChartOptions.plugins.tooltip, callbacks: {
+                ...commonChartOptions.plugins.tooltip.callbacks,
+                label: (context) => `Funding: $${context.raw.toFixed(2)} Billion`,
+            }}},
+             scales: { y: {...commonChartOptions.scales.y, title: { display: true, text: 'Quarterly Funding in USD Billions', font: {weight: '600'}}},
+                       x: {...commonChartOptions.scales.x}
+             }
+        }
+    });
+
+    renderRegionSelector();
+    renderThemes();
+    renderStrategies();
+    
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    window.onscroll = () => {
+        let current = 'overview';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 100) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').substring(1) === current) {
+                link.classList.add('active');
+            }
+        });
+    };
+});
+</script>
+
+</body>
 </html>
+
 
